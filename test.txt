@@ -1,0 +1,9 @@
+What is this app for?
+(F) Making new friends
+(F) Looking up cat memes
+(T) Creating fantastic quizzes yay
+#
+Are wolves cats?
+(F) Yes, obviously
+(T) Dude, no
+(T) I don't understand the question
