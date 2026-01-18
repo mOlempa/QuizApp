@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from uploader.models import Quiz, Question, Answer
 
 # Create your views here.
@@ -18,3 +18,8 @@ def get(request, id):
     answers = Answer.objects.filter(question__in=questions)
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
+
+def remove(request, id):
+    quiz = get_object_or_404(Quiz, id=id)
+    quiz.delete()
+    return redirect('quizlist')

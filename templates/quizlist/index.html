@@ -4,7 +4,10 @@
 {% if quizzes %}
     <ul>
     {% for q in quizzes %}
-        <li><a href="/quizlist/{{q.id}}">{{ q.name }}</a>></li>
+        <li>{{ q.name }}
+            <a href="/quizlist/{{q.id}}">View</a>
+            <a href="/quizlist/{{q.id}}/remove">Delete</a>
+        </li>
     {% endfor %}
     </ul>
 {% else %}
