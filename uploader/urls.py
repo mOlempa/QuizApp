@@ -19,5 +19,5 @@ from .views import index, upload_file_view
 
 urlpatterns = [
     path('', index, name='uploader'),
-    path('upload/', upload_file_view, name='upload_file'),
+    path('upload/', upload_file_view, name='upload_file')
 ]

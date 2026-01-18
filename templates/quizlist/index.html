@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if quizzes %}
+    <ul>
+    {% for q in quizzes %}
+        <li><a href="/quizlist/{{q.id}}">{{ q.name }}</a>></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No quizzes are available.</p>
+{% endif %}
+
+{% endblock %}

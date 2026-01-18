@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>Quiz: {{ quiz.name }}</p>
+<ul>
+{% for q in questions %}
+    <li>{{ q.text }}</li>
+    <ul>
+    {% for a in answers %}
+        {% if a.question_id is q.id %}
+            <li>{{ a.text }}</li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endfor %}
+</ul>
+
+{% endblock %}

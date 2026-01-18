@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db import transaction
 from django.http import HttpResponse
-from .models import Question, Answer
+from .models import Question, Answer, Quiz
 
 # Create your views here.
 def index(request):
@@ -22,7 +22,8 @@ def upload_file_view(request):
         # Wrap in a transaction for safety
         try:
             with transaction.atomic():
-                parse_and_save_questions(file_content)
+                quiz_object = Quiz.objects.create(name=filename.replace('.txt', ''))
+                parse_and_save_questions(file_content, quiz_object)
         except Exception as e:
             # Handle parsing errors (e.g., wrong format)
             print(f"Error processing file: {e}")
@@ -34,7 +35,7 @@ def upload_file_view(request):
     })
     
 
-def parse_and_save_questions(file_content):
+def parse_and_save_questions(file_content, quiz_object):
     # Split the file into blocks based on an empty line with #
     # .strip() removes leading/trailing whitespace; split('#') finds # and splits
     blocks = file_content.strip().split('#')
@@ -48,7 +49,7 @@ def parse_and_save_questions(file_content):
 
         # The first line is always the question
         question_text = lines[0]
-        question_obj = Question.objects.create(text=question_text)
+        question_obj = Question.objects.create(text=question_text, quiz=quiz_object)
 
         # The remaining lines are answers
         for answer_line in lines[1:]:
