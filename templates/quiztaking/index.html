@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>Quiz: {{ quiz.name }}</p>
+<form method="post">
+    {% csrf_token %}
+    <ul>
+    {% for q in questions %}
+        <li>{{ q.text }}</li>
+        {% for a in answers %}
+            {% if a.question_id == q.id %}
+            <div>
+                <input type="checkbox" id="answer_{{ a.id }}" name="selected_answers" value="{{a.id}}" />
+                <label for="answer_{{ a.id }}">{{ a.text }}</label>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    </ul>
+    <input type="submit" value="Check">
+</form>
+
+<a href="/quizlist">Back to list</a>
+
+{% endblock %}

@@ -10,16 +10,13 @@ def index(request):
     return render(request, 'quizlist/index.html', context)
 
 def get(request, id):
-    # funkcja get_object_or_404 zwraca element z bazy
-    # danych o danej warto±ci argumentu
-    # lub przesªyªa do kilenta bª¡d
     quiz = get_object_or_404(Quiz, id=id)
     questions = Question.objects.filter(quiz_id=quiz.id)
     answers = Answer.objects.filter(question__in=questions)
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
 
-def remove(request, id):
+def remove(id):
     quiz = get_object_or_404(Quiz, id=id)
     quiz.delete()
     return redirect('quizlist')

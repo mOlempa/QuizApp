@@ -5,8 +5,9 @@
     <ul>
     {% for q in quizzes %}
         <li>{{ q.name }}
-            <a href="/quizlist/{{q.id}}">View</a>
-            <a href="/quizlist/{{q.id}}/remove">Delete</a>
+            <a href="/quiztaking/{{q.id}}">DO</a>
+            <a href="/quizlist/{{q.id}}">VIEW</a>
+            <a href="/quizlist/{{q.id}}/remove">DELETE</a>
         </li>
     {% endfor %}
     </ul>
