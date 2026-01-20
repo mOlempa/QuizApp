@@ -16,7 +16,7 @@ def get(request, id):
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
 
-def remove(id):
+def remove(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     quiz.delete()
     return redirect('quizlist')

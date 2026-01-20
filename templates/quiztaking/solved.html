@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<p>Quiz: {{ quiz.name }}</p>
+<ul>
+{% for q in questions %}
+    <li>{{ q.text }}</li>
+    {% for a in answers %}
+        {% if a.question_id == q.id %}
+        <div>
+            {% if a in chosen_answers %}
+                <input type="checkbox" disabled checked="1"/>
+            {% else %}
+                <input type="checkbox" disabled/>
+            {% endif %}
+            {% if a.id in correct_answers %}
+                <p style="color: green;">{{ a.text }}</p>
+            {% else %}
+                <p style="color: red;">{{ a.text }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+</ul>
+
+<a href="/quizlist">Back to list</a>
+
+{% endblock %}

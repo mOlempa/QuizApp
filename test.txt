@@ -6,4 +6,4 @@ What is this app for?
 Are wolves cats?
 (F) Yes, obviously
 (T) Dude, no
-(T) I don't understand the question
+(F) I don't understand the question
