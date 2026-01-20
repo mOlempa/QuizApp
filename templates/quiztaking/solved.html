@@ -8,16 +8,17 @@
     {% for a in answers %}
         {% if a.question_id == q.id %}
         <div>
+            {% if a.id in correct_answers %}
+                <p style="color: green;">
+            {% else %}
+                <p style="color: red;">
+            {% endif %}
             {% if a in chosen_answers %}
                 <input type="checkbox" disabled checked="1"/>
             {% else %}
                 <input type="checkbox" disabled/>
             {% endif %}
-            {% if a.id in correct_answers %}
-                <p style="color: green;">{{ a.text }}</p>
-            {% else %}
-                <p style="color: red;">{{ a.text }}</p>
-            {% endif %}
+            {{ a.text }}</p>
         </div>
         {% endif %}
     {% endfor %}
