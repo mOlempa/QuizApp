@@ -1,0 +1,27 @@
+
+/* Remove default browser spacing */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-items ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 10px;
+    overflow: hidden;
+    background-color:darkgray;
+    top: 0;
+}
+
+.navbar-items li{
+   padding: 0 .5em;
+}
+
+.navbar-items a{
+   text-decoration: none;
+   text-align: center;
+   color:black;
+   display: block;
+}

@@ -1,5 +1,5 @@
 """
-URL configuration for myquiz project.
+URL configuration for lab project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -14,13 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from .views import index, add_question
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('uploader.urls')),
-    path('quizlist/', include('quizlist.urls')),
-    path('quiztaking/', include('quiztaking.urls')),
-    path('createquiz/', include('createquiz.urls'))
+    path('', index, name='createquiz'),
+    path('<int:quiz_id>/', add_question, name='add_question'),
 ]

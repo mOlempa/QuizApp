@@ -16,6 +16,31 @@ def get(request, id):
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
 
+# def edit(request, id):
+#     question = get_object_or_404(Question, id=id)
+#     # If POST - get filled form data
+#     # If GET - send an empty form
+#     if request.method == 'POST':
+#         # Check if form is valid
+#         form = QuestionForm(request.POST, instance=question)
+#         if form.is_valid():
+#             # If data is valid, add to database
+#             form = form.save(commit=False)
+#             form.author = request.user.username
+#             form.create_time = timezone.now()
+#             form.last_edit_time = timezone.now()
+#             form.save()
+#             return redirect('view_todo')
+#         # If data is not valid, send the form back to the client (errors will be marked automatically)
+#         else:
+#             context = {'form': form}
+#             return render(request, 'todo/edit.html', context)
+#     else:
+#         form = TodoForm(instance=todo)
+#         context = {'form': form, 'id': id}
+#         return render(request, 'todo/edit.html', context)
+
+
 def remove(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     quiz.delete()
