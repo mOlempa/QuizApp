@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Edit question for {{ quiz.name }}</h2>
+
+<form method="post" id="quiz-form">
+    {% csrf_token %}
+    
+    <h3>Question</h3>
+    {{ form.as_p }}
+
+    <h3>Answers</h3>
+    {{ formset.management_form }}
+    <div id="answer-form-list">
+        {% for answer_form in formset %}
+            <div class="answer-form">
+                {{ answer_form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="empty-form" style="display:none;">
+        <div class="answer-form">
+            {{ formset.empty_form.as_p }}
+        </div>
+    </div>
+
+    <button type="button" id="add-answer">Add Another Answer</button><br>
+    <button type="submit">Save Question</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const addAnswerBtn = document.getElementById('add-answer');
+    const totalForms = document.getElementById('id_answers-TOTAL_FORMS'); // Note: prefix is 'answers'
+    const formContainer = document.getElementById('answer-form-list');
+    const emptyForm = document.getElementById('empty-form').innerHTML;
+
+    addAnswerBtn.addEventListener('click', function() {
+        // 1. Get the current number of forms
+        const currentFormCount = parseInt(totalForms.value);
+
+        // 2. Replace the '__prefix__' in the empty form with the current count
+        const newFormHtml = emptyForm.replace(/__prefix__/g, currentFormCount);
+
+        // 3. Create a new div and append the HTML
+        const newFormDiv = document.createElement('div');
+        newFormDiv.setAttribute('class', 'answer-form');
+        newFormDiv.innerHTML = newFormHtml;
+        
+        formContainer.appendChild(newFormDiv);
+
+        // 4. Increment the total forms management field
+        totalForms.value = currentFormCount + 1;
+    });
+});
+</script>
+
+{% endblock %}

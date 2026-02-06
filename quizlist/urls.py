@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from .views import index, get, remove
+from .views import index, get, remove, edit #remove_question
 
 urlpatterns = [
     path('', index, name='quizlist'),
     path('<int:id>/', get, name='get'),
-    path('<int:id>/remove/', remove, name='remove')
+    path('<int:id>/remove/', remove, name='remove'),
+    path('<int:id>/edit/', edit, name='edit'),
+    #path('<int:id>/remove_question/', remove_question, name='remove_question'),
 ]

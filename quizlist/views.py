@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from uploader.models import Quiz, Question, Answer
+from createquiz.forms import QuestionForm, AnswerFormSet
 
 # Create your views here.
 def index(request):
@@ -16,32 +17,48 @@ def get(request, id):
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
 
-# def edit(request, id):
-#     question = get_object_or_404(Question, id=id)
-#     # If POST - get filled form data
-#     # If GET - send an empty form
-#     if request.method == 'POST':
-#         # Check if form is valid
-#         form = QuestionForm(request.POST, instance=question)
-#         if form.is_valid():
-#             # If data is valid, add to database
-#             form = form.save(commit=False)
-#             form.author = request.user.username
-#             form.create_time = timezone.now()
-#             form.last_edit_time = timezone.now()
-#             form.save()
-#             return redirect('view_todo')
-#         # If data is not valid, send the form back to the client (errors will be marked automatically)
-#         else:
-#             context = {'form': form}
-#             return render(request, 'todo/edit.html', context)
-#     else:
-#         form = TodoForm(instance=todo)
-#         context = {'form': form, 'id': id}
-#         return render(request, 'todo/edit.html', context)
+def edit(request, id):
+    question = get_object_or_404(Question, id=id)
+    quiz = get_object_or_404(Quiz, id=question.quiz.id)
+    
+    if request.method == "POST":
+        # Pass instance=question so Django knows we are updating, not creating
+        form = QuestionForm(request.POST, instance=question)
+        formset = AnswerFormSet(request.POST, instance=question)
+        
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save() # This saves all answers and deletes those marked for deletion
+
+            # Redirect logic
+            questions = Question.objects.filter(quiz_id=quiz.id)
+            answers = Answer.objects.filter(question__in=questions)
+            context = {'quiz': quiz, 'questions': questions, 'answers': answers}
+            return render(request, 'quizlist/view_quiz.html', context)
+    else:
+        # Prefill the question text
+        form = QuestionForm(instance=question)
+        # Prefill the formset with existing answers related to this question
+        formset = AnswerFormSet(instance=question)
+
+    return render(request, 'quizlist/edit.html', {
+        'form': form,
+        'formset': formset,
+        'quiz': quiz
+    })
 
 
 def remove(request, id):
     quiz = get_object_or_404(Quiz, id=id)
     quiz.delete()
     return redirect('quizlist')
+
+
+# def remove_question(request, id):
+#     question = get_object_or_404(Question, id=id)
+#     quiz = Quiz.objects.filter(id=question.quiz.id)
+#     question.delete()
+#     questions = Question.object.filter(quiz_id=quiz.id)
+#     answers = Answer.objects.filter(question__in=questions)
+#     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
+#     return render(request, 'quizlist/view_quiz.html', context)
