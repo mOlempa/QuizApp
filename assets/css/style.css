@@ -5,3 +5,13 @@
 a {
     color: green;
 }
+
+.logout-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+}

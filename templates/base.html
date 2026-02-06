@@ -12,7 +12,17 @@
             <li><a href="/createquiz">Create</a></li>
             <li><a href="/upload">Upload</a></li>
             <li><a href="/quizlist">Quizzes</a></li>
+            {% if user.is_authenticated %}
+            <li>{{ user.username }}</li>
+            <li><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="logout-link">
+                Log out
+                </button></form></li>
+            {% else %}
+            <li><a href="/registration">Register</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
         </ul>
+
     </div>
     {% block content %}{% endblock %}
 </body>
