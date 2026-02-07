@@ -9,10 +9,11 @@
     <div class="navbar-items">
         <ul>
             <li><a href="/">Home</a></li>
+            <li><a href="/quizlist/all_quizzes">Do Quizzes</a></li>
+            {% if user.is_authenticated %}
             <li><a href="/createquiz">Create</a></li>
             <li><a href="/upload">Upload</a></li>
-            <li><a href="/quizlist">Quizzes</a></li>
-            {% if user.is_authenticated %}
+            <li><a href="/quizlist">My Quizzes</a></li>
             <li>{{ user.username }}</li>
             <li><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="logout-link">
                 Log out

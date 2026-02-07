@@ -1,7 +1,17 @@
 from django.db import models
+from django.conf import settings
 
 class Quiz(models.Model):
-    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.RESTRICT,
+        related_name="quizzes",
+        default=2,
+    )
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 class Question(models.Model):
     text = models.TextField()

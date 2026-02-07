@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import QuizForm, QuestionForm, AnswerFormSet
 from uploader.models import Quiz, Question, Answer
@@ -19,7 +20,7 @@ def index(request):
         'form': form
     })
 
-
+@login_required
 def add_question(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)
     
@@ -28,13 +29,14 @@ def add_question(request, quiz_id):
         formset = AnswerFormSet(request.POST)
         
         if form.is_valid() and formset.is_valid():
+            quiz.owner = request.user
             quiz.save()
 
             # Save the question but don't commit to DB yet
             question = form.save(commit=False)
             question.quiz = quiz
             question.save()
-            
+
             # Save the answers linked to that question
             answers = formset.save(commit=False)
             for answer in answers:
@@ -60,5 +62,5 @@ def add_question(request, quiz_id):
         return render(request, 'createquiz/create.html', {
             'form': form,
             'formset': formset,
-            'quiz': quiz
+            'quiz': quiz,
         })

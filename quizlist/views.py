@@ -4,22 +4,28 @@ from createquiz.forms import QuestionForm, AnswerFormSet
 
 # Create your views here.
 def index(request):
-    quizzes = Quiz.objects.order_by('name')
+    quizzes = Quiz.objects.order_by('name').filter(owner=request.user)
     # Create a dictionary storing database elements under quizzes variable
     context = {'quizzes': quizzes}
     # Sending rendered site together with database elements, which are used in quizlist/index.html file
     return render(request, 'quizlist/index.html', context)
 
 def get(request, id):
-    quiz = get_object_or_404(Quiz, id=id)
+    quiz = get_object_or_404(Quiz, id=id, owner=request.user)
     questions = Question.objects.filter(quiz_id=quiz.id)
     answers = Answer.objects.filter(question__in=questions)
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
     return render(request, 'quizlist/view_quiz.html', context)
 
+def get_all(request):
+    quizzes = Quiz.objects.order_by('name')
+    context = {'quizzes': quizzes}
+    return render(request, 'quizlist/all_quizzes.html', context)
+
+
 def edit(request, id):
     question = get_object_or_404(Question, id=id)
-    quiz = get_object_or_404(Quiz, id=question.quiz.id)
+    quiz = get_object_or_404(Quiz, id=question.quiz.id, owner=request.user)
     
     if request.method == "POST":
         # Pass instance=question so Django knows we are updating, not creating
@@ -49,7 +55,7 @@ def edit(request, id):
 
 
 def remove(request, id):
-    quiz = get_object_or_404(Quiz, id=id)
+    quiz = get_object_or_404(Quiz, id=id, owner=request.user)
     quiz.delete()
     return redirect('quizlist')
 
