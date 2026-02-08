@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 from uploader.models import Quiz, Question, Answer
@@ -27,7 +28,8 @@ def get_all(request):
 
 def edit(request, id):
     question = get_object_or_404(Question, id=id)
-    if not request.user.is_superuser or question.owner == request.user:
+    quiz = question.quiz
+    if not request.user.is_superuser or quiz.owner == request.user:
         raise PermissionDenied
     quiz = get_object_or_404(Quiz, id=question.quiz.id)
     
@@ -66,11 +68,24 @@ def remove(request, id):
     return redirect('quizlist')
 
 
-# def remove_question(request, id):
-#     question = get_object_or_404(Question, id=id)
-#     quiz = Quiz.objects.filter(id=question.quiz.id)
-#     question.delete()
-#     questions = Question.object.filter(quiz_id=quiz.id)
-#     answers = Answer.objects.filter(question__in=questions)
-#     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
-#     return render(request, 'quizlist/view_quiz.html', context)
+@login_required
+def remove_question(request, id):
+    question = get_object_or_404(Question, id=id)
+    quiz = question.quiz
+
+    # Permission check
+    if not request.user.is_superuser and quiz.owner != request.user:
+        raise PermissionDenied
+
+    # Delete question (answers will cascade automatically)
+    question.delete()
+
+    # Reload remaining questions
+    questions = Question.objects.filter(quiz_id=quiz.id)
+
+    context = {
+        "quiz": quiz,
+        "questions": questions,
+    }
+
+    return render(request, "quizlist/view_quiz.html", context)

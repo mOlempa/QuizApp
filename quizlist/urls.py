@@ -23,5 +23,5 @@ urlpatterns = [
     path('<int:id>/remove/', remove, name='remove'),
     path('<int:id>/edit/', edit, name='edit'),
     path('all_quizzes/', get_all, name='all_quizzes'),
-    #path('<int:id>/remove_question/', remove_question, name='remove_question'),
+    path('<int:id>/remove_question/', remove_question, name='remove_question'),
 ]

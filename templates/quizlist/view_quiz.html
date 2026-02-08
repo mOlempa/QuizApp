@@ -13,10 +13,11 @@
     {% endfor %}
     </ul>
     <a href="/quizlist/{{ q.id }}/edit">Edit Question</a><br>
-    <!--  <a href="/quizlist/{{ q.id }}/remove_question">Delete Question</a> -->
+    <a href="/quizlist/{{ q.id }}/remove_question">Delete Question</a>
 {% endfor %}
 </ul>
 
+<a href ="/createquiz/{{ quiz.id }}">Add question</a>
 <a href="/quizlist">Back to list</a>
 
 {% endblock %}
