@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, get_object_or_404, redirect
 from uploader.models import Quiz, Question, Answer
 from createquiz.forms import QuestionForm, AnswerFormSet
@@ -11,7 +12,7 @@ def index(request):
     return render(request, 'quizlist/index.html', context)
 
 def get(request, id):
-    quiz = get_object_or_404(Quiz, id=id, owner=request.user)
+    quiz = get_object_or_404(Quiz, id=id)
     questions = Question.objects.filter(quiz_id=quiz.id)
     answers = Answer.objects.filter(question__in=questions)
     context = {'quiz': quiz, 'questions': questions, 'answers': answers}
@@ -22,10 +23,11 @@ def get_all(request):
     context = {'quizzes': quizzes}
     return render(request, 'quizlist/all_quizzes.html', context)
 
-
 def edit(request, id):
     question = get_object_or_404(Question, id=id)
-    quiz = get_object_or_404(Quiz, id=question.quiz.id, owner=request.user)
+    if not request.user.is_superuser or question.owner == request.user:
+        raise PermissionDenied
+    quiz = get_object_or_404(Quiz, id=question.quiz.id)
     
     if request.method == "POST":
         # Pass instance=question so Django knows we are updating, not creating
@@ -55,7 +57,9 @@ def edit(request, id):
 
 
 def remove(request, id):
-    quiz = get_object_or_404(Quiz, id=id, owner=request.user)
+    quiz = get_object_or_404(Quiz, id=id)
+    if not request.user.is_superuser or quiz.owner == request.user:
+        raise PermissionDenied
     quiz.delete()
     return redirect('quizlist')
 
