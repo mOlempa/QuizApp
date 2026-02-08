@@ -5,7 +5,9 @@ from createquiz.forms import QuestionForm, AnswerFormSet
 
 # Create your views here.
 def index(request):
-    quizzes = Quiz.objects.order_by('name').filter(owner=request.user)
+    quizzes = Quiz.objects.order_by('name')
+    if not request.user.is_superuser:
+        quizzes = quizzes.filter(owner=request.user)
     # Create a dictionary storing database elements under quizzes variable
     context = {'quizzes': quizzes}
     # Sending rendered site together with database elements, which are used in quizlist/index.html file
@@ -58,7 +60,7 @@ def edit(request, id):
 
 def remove(request, id):
     quiz = get_object_or_404(Quiz, id=id)
-    if not request.user.is_superuser or quiz.owner == request.user:
+    if not request.user.is_superuser and quiz.owner != request.user:
         raise PermissionDenied
     quiz.delete()
     return redirect('quizlist')
