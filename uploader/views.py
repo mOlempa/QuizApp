@@ -22,7 +22,7 @@ def upload_file_view(request):
         # Wrap in a transaction for safety
         try:
             with transaction.atomic():
-                quiz_object = Quiz.objects.create(name=filename.replace('.txt', ''))
+                quiz_object = Quiz.objects.create(name=filename.replace('.txt', ''), owner=request.user)
                 parse_and_save_questions(file_content, quiz_object)
         except Exception as e:
             # Handle parsing errors (e.g., wrong format)
